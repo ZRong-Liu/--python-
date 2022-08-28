@@ -57,16 +57,32 @@ x = [a] * 4操作中，只是创建4个指向list的引用，所以一旦a改变
 
 	print(len(x))  # 7
 
+ 严格来说 append 是追加，把一个东西整体添加在列表后，而 extend 是扩展，把一个东西里的所有元素添加在列表后。
  
+ list.insert(index, obj) 在编号 index 位置插入 obj。
+	x = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+	x.insert(2, 'Sunday')
+	print(x)
+	# ['Monday', 'Tuesday', 'Sunday', 'Wednesday', 'Thursday', 'Friday']
+
+	print(len(x))  # 6
  
+ 4. 删除列表中的元素¶
+ list.remove(obj) 移除列表中某个值的第一个匹配项
+	x = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+	x.remove('Monday')
+	print(x)  # ['Tuesday', 'Wednesday', 'Thursday', 'Friday']
  
- 
- 
- 
- 
- 
- 
- 
- 
+ list.pop([index=-1]) 移除列表中的一个元素（默认最后一个元素），并且返回该元素的值
+	x = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+	y = x.pop()
+	print(y)  # Friday
+
+	y = x.pop(0)
+	print(y)  # Monday
+
+	y = x.pop(-2)
+	print(y)  # Wednesday
+	print(x)  # ['Tuesday', 'Thursday']
  
  
