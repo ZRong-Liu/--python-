@@ -1,0 +1,96 @@
+**其他运算符**
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/eacb083c-4c74-4341-a6fe-f6aaa197df44/Untitled.png)
+
+- is, is not 对比的是两个变量的内存地址
+- ==, != 对比的是两个变量的值
+- 比较的两个变量，指向的都是地址不可变的类型（str等），那么is，is not 和 ==，！= 是完全等价的。
+- 对比的两个变量，指向的是地址可变的类型（list，dict，tuple等），则两者是有区别的。
+
+```python
+#比较的两个变量均指向不可变类型
+a = "hello"
+b = "hello"
+print(a is b, a == b)  # True True
+print(a is not b, a != b)  # False False
+#比较的两个变量均指向可变类型
+a = ["hello"]
+b = ["hello"]
+print(a is b, a == b)  # False True
+print(a is not b, a != b)  # True False
+```
+
+**运算符的优先级**
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/95728715-ea8d-48a4-8726-66cb34d188fe/Untitled.png)
+
+保留浮点型的小数点后 `n`位
+
+用 `decimal`包里的 `Decimal`对象和 `getcontext()` 方法来实现
+
+```python
+a = decimal.getcontext()
+print(a)
+
+# Context(prec=28, rounding=ROUND_HALF_EVEN, Emin=-999999, Emax=999999,
+# capitals=1, clamp=0, flags=[], 
+# traps=[InvalidOperation, DivisionByZero, Overflow])
+```
+
+**布尔型**
+
+布尔 (boolean) 型变量只能取两个值，`True` 和 `False`。当把布尔型变量用在数字运算中，用 `1` 和 `0` 代表 `True` 和 `False`。
+
+判断两个类型是否相同推荐使用 `isinstance()`
+
+**print() 函数**
+
+```python
+print(*objects, sep=' ', end='\n', file=sys.stdout, flush=False)
+```
+
+- 将对象以字符串表示的方式格式化输出到流文件对象file里。其中所有非关键字参数都按`str()`方式进行转换为字符串输出；
+- 关键字参数`sep`是实现分隔符，比如多个参数输出时想要输出中间的分隔字符；
+- 关键字参数`end`是输出结束时的字符，默认是换行符`\n`；
+- 关键字参数`file`是定义流输出的文件，可以是标准的系统输出`sys.stdout`，也可以重定义为别的文件；
+- 关键字参数`flush`是立即把内容输出到流文件，不作缓存
+
+**利用位运算实现快速计算**
+
+通过 `<<`，`>>` 快速计算2的倍数问题。
+
+```
+n<< 1-> 计算 n*2
+n>> 1-> 计算 n/2，负奇数的运算不可用
+n<< m-> 计算 n*(2^m)，即乘以 2 的 m 次方
+n>> m-> 计算 n/(2^m)，即除以 2 的 m 次方
+1<< n-> 2^n
+```
+
+通过 `^` 快速交换两个整数。 通过 `^` 快速交换两个整数。
+
+```
+a^= b
+b^= a
+a^= b
+```
+
+通过 `a & (-a)` 快速获取`a`的最后为 1 位置的整数。
+
+```
+00 00 01 01-> 5
+&11 11 10 11->-5
+---
+00 00 00 01-> 1
+
+00 00 11 10-> 14
+&11 11 00 10->-14
+---
+00 00 00 10-> 2
+```
+
+**pass 语句**
+
+`pass`语句的意思是“不做任何事”，如果你在需要有语句的地方不写任何语句，那么解释器会提示出错，而 `pass`语句就是用来解决这些问题的。
+
+`pass`是空语句，不做任何操作，只起到占位的作用，其作用是为了保持程序结构的完整性。尽管`pass`语句不做任何操作，但如果暂时不确定要在一个位置放上什么样的代码，可以先放置一个`pass`语句，让代码可以正常运行。
