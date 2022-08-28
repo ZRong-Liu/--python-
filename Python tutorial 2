@@ -3,3 +3,70 @@
 	x = [i for i in range(10, 1, -2)]
 	print(x, type(x))
 	# [10, 8, 6, 4, 2] <class 'list'>
+注意：由于list的元素可以是任何对象，因此列表中所保存的是对象的指针。即使保存一个简单的[1,2,3]，也有3个指针和3个整数对象。
+x = [a] * 4操作中，只是创建4个指向list的引用，所以一旦a改变，x中4个a也会随之改变。
+
+【例子】
+	x = [[0] * 3] * 4
+	print(x, type(x))
+	# [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]] <class 'list'>
+
+	x[0][0] = 1
+	print(x, type(x))
+	# [[1, 0, 0], [1, 0, 0], [1, 0, 0], [1, 0, 0]] <class 'list'>
+
+	a = [0] * 3
+	x = [a] * 4
+	print(x, type(x))
+	# [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]] <class 'list'>
+
+	x[0][0] = 1
+	print(x, type(x))
+	# [[1, 0, 0], [1, 0, 0], [1, 0, 0], [1, 0, 0]] <class 'list'>
+
+ 
+ 创建一个混合列表
+ 	【例子】
+  		mix = [1, 'lsgo', 3.14, [1, 2, 3]]
+		print(mix, type(mix))  
+		# [1, 'lsgo', 3.14, [1, 2, 3]] <class 'list'>
+ 
+ 创建一个空列表
+ 	【例子】
+ 		empty = []
+		print(empty, type(empty))  # [] <class 'list'>
+		
+ 列表不像元组，列表内容可更改 (mutable)，因此附加 (append, extend)、插入 (insert)、删除 (remove, pop) 这些操作都可以用在它身上。
+ 
+ 
+ 向列表中添加元素
+ list.append(obj) 在列表末尾添加新的对象，只接受一个参数，参数可以是任何数据类型，被追加的元素在 list 中保持着原结构类型。
+	 x = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+	x.append(['Thursday', 'Sunday'])
+	print(x)  
+	# ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', ['Thursday', 'Sunday']]
+
+	print(len(x))  # 6
+ 此元素如果是一个 list，那么这个 list 将作为一个整体进行追加，注意append()和extend()的区别。
+ 
+ list.extend(seq) 在列表末尾一次性追加另一个序列中的多个值（用新列表扩展原来的列表）
+	 x = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+	x.extend(['Thursday', 'Sunday'])
+	print(x)  
+	# ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Thursday', 'Sunday']
+
+	print(len(x))  # 7
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
