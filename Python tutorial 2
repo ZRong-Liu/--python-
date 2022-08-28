@@ -1,0 +1,5 @@
+利用推导式创建列表
+
+	x = [i for i in range(10, 1, -2)]
+	print(x, type(x))
+	# [10, 8, 6, 4, 2] <class 'list'>
