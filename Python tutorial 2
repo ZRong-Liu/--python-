@@ -162,6 +162,67 @@ x = [a] * 4操作中，只是创建4个指向list的引用，所以一旦a改变
 	 元组使用小括号，列表使用方括号。
 	 元组与列表类似，也用整数来对它进行索引 (indexing) 和切片 (slicing)。
  
+ 元组中只包含一个元素时，需要在元素后面添加逗号，否则括号会被当作运算符使用。
+	x = (1)
+	print(type(x))  # <class 'int'>
+	x = 2, 3, 4, 5
+	print(type(x))  # <class 'tuple'>
+	x = []
+	print(type(x))  # <class 'list'>
+	x = ()
+	print(type(x))  # <class 'tuple'>
+	x = (1,)
+	print(type(x))  # <class 'tuple'>
+ 
+	print(8 * (8))  # 64
+	print(8 * (8,))  # (8, 8, 8, 8, 8, 8, 8, 8)
+ 
+ 2. 更新和删除一个元组
+   元组有不可更改 (immutable) 的性质，因此不能直接给元组的元素赋值，但是只要元组中的元素可更改 (mutable)，
+   那么我们可以直接更改其元素，注意这跟赋值其元素不同。
+	t1 = (1, 2, 3, [4, 5, 6])
+	print(t1)  # (1, 2, 3, [4, 5, 6])
+	t1[3][0] = 9
+	print(t1)  # (1, 2, 3, [9, 5, 6])
+ 
+ 4. 内置方法
+   元组大小和内容都不可更改，因此只有 count 和 index 两种方法。
+	t = (1, 10.31, 'python')
+	print(t.count('python'))  # 1
+	print(t.index(10.31))  # 1
+
+	count('python') 是记录在元组 t 中该元素出现几次，显然是 1 次
+	index(10.31) 是找到该元素在元组 t 的索引，显然是 1
+ 
+ 5. 解压元组
+   解压（unpack）一维元组（有几个元素左边括号定义几个变量）
+	t = (1, 10.31, 'python')
+	(a, b, c) = t
+	print(a, b, c)
+	# 1 10.31 python
+   解压二维元组（按照元组里的元组结构来定义变量）
+	t = (1, 10.31, ('OK', 'python'))
+	(a, b, (c, d)) = t
+	(i, j, k) = t
+	print(a, b, c, d)   # 1 10.31 OK python
+	print(i, j, k)      #1 10.31 ('OK', 'python')
+   如果你只想要元组其中几个元素，用通配符「*」，英文叫 wildcard，在计算机语言中代表一个或多个元素。下例就是把多个元素丢给了 rest 变量。
+	t = 1, 2, 3, 4, 5
+	a, b, *rest, c = t
+	print(a, b, c)  # 1 2 5
+	print(rest)  # [3, 4]
+   如果你根本不在乎 rest 变量，那么就用通配符「*」加上下划线「_」。
+	t = 1, 2, 3, 4, 5
+	a, b, *_ = t
+	print(a, b)  # 1 2
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  
  
  
