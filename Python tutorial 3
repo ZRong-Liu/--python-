@@ -1,0 +1,124 @@
+Python 的函数具有非常灵活多样的参数形态，既可以实现简单的调用，又可以传入非常复杂的参数。从简到繁的参数形态如下：
+
+位置参数 (positional argument)
+默认参数 (default argument)
+可变参数 (variable argument)
+关键字参数 (keyword argument)
+命名关键字参数 (name keyword argument)
+参数组合
+
+
+3. 可变参数
+
+顾名思义，可变参数就是传入的参数个数是可变的，可以是 0, 1, 2 到任意个，是不定长的参数。
+
+def functionname(arg1, arg2=v, *args):
+       "函数_文档字符串"
+       function_suite
+       return [expression]
+
+*args - 可变参数，可以是从零个到任意个，自动组装成元组。
+加了星号（*）的变量名会存放所有未命名的变量参数。
+  def printinfo(arg1, *args):
+      print(arg1)
+      print(args)
+      for var in args:
+          print(var)
+
+
+  printinfo(10)  # 10
+  printinfo(70, 60, 50)
+  #10
+  #()
+  #70
+  #(60, 50)
+  #60
+  #50
+
+4. 关键字参数
+
+def functionname(arg1, arg2=v, args, *kw):
+       "函数_文档字符串"
+       function_suite
+       return [expression]
+
+**kw - 关键字参数，可以是从零个到任意个，自动组装成字典。
+  def printinfo(arg1, *args, **kwargs):
+      print(arg1)
+      print(args)
+      print(kwargs)
+
+
+  printinfo(70, 60, 50)
+  # 70
+  # (60, 50)
+  # {}
+  printinfo(70, 60, 50, a=1, b=2)
+  # 70
+  # (60, 50)
+  # {'a': 1, 'b': 2}
+
+
+5. 命名关键字参数
+
+def functionname(arg1, arg2=v, args, *, nkw, *kw):
+       "函数_文档字符串"
+       function_suite
+       return [expression]
+
+*, nkw - 命名关键字参数，用户想要输入的关键字参数，定义方式是在nkw 前面加个分隔符 *。
+如果要限制关键字参数的名字，就可以用「命名关键字参数」
+使用命名关键字参数时，要特别注意不能缺少参数名。
+  def printinfo(arg1, *, nkw, **kwargs):
+      print(arg1)
+      print(nkw)
+      print(kwargs)
+
+
+  printinfo(70, nkw=10, a=1, b=2)
+  # 70
+  # 10
+  # {'a': 1, 'b': 2}
+
+  printinfo(70, 10, a=1, b=2)
+  # TypeError: printinfo() takes 1 positional argument but 2 were given
+没有写参数名nwk，因此 10 被当成「位置参数」，而原函数只有 1 个位置函数，现在调用了 2 个，因此程序会报错。
+
+
+6. 参数组合
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
