@@ -87,6 +87,498 @@ def functionname(arg1, arg2=v, args, *, nkw, *kw):
 
 6. 参数组合
 
+在 Python 中定义函数，可以用位置参数、默认参数、可变参数、命名关键字参数和关键字参数，这 5 种参数中的 4 个都可以一起使用，但是注意，参数定义的顺序必须是：
+
+位置参数、默认参数、可变参数和关键字参数。
+位置参数、默认参数、命名关键字参数和关键字参数。
+要注意定义可变参数和关键字参数的语法：
+
+*args 是可变参数，args 接收的是一个 tuple
+**kw 是关键字参数，kw 接收的是一个 dict
+命名关键字参数是为了限制调用者可以传入的参数名，同时可以提供默认值。定义命名关键字参数不要忘了写分隔符 *，否则定义的是位置参数。
+
+警告：虽然可以组合多达 5 种参数，但不要同时使用太多的组合，否则函数很难懂。
+
+
+
+变量作用域
+
+Python 中，程序的变量并不是在哪个位置都可以访问的，访问权限决定于这个变量是在哪里赋值的。
+定义在函数内部的变量拥有局部作用域，该变量称为局部变量。
+定义在函数外部的变量拥有全局作用域，该变量称为全局变量。
+局部变量只能在其被声明的函数内部访问，而全局变量可以在整个程序范围内访问。
+
+当内部作用域想修改外部作用域的变量时，就要用到global和nonlocal关键字了。
+【例子】
+num = 1
+
+def fun1():
+    global num  # 需要使用 global 关键字声明
+    print(num)  # 1
+    num = 123
+    print(num)  # 123
+
+
+fun1()
+print(num)  # 123
+
+
+内嵌函数
+【例子】
+def outer():
+    print('outer函数在这被调用')
+
+    def inner():
+        print('inner函数在这被调用')
+
+    inner()  # 该函数只能在outer函数内部被调用
+
+
+outer()
+# outer函数在这被调用
+# inner函数在这被调用
+
+
+闭包
+是函数式编程的一个重要的语法结构，是一种特殊的内嵌函数。
+如果在一个内部函数里对外层非全局作用域的变量进行引用，那么内部函数就被认为是闭包。
+通过闭包可以访问外层非全局作用域的变量，这个作用域称为 闭包作用域。
+【例子】
+       def funX(x):
+           def funY(y):
+               return x * y
+
+           return funY
+
+
+       i = funX(8)
+       print(type(i))  # <class 'function'>
+       print(i(5))  # 40
+【例子】闭包的返回值通常是函数。
+def make_counter(init):
+    counter = [init]
+
+    def inc(): counter[0] += 1
+
+    def dec(): counter[0] -= 1
+
+    def get(): return counter[0]
+
+    def reset(): counter[0] = init
+
+    return inc, dec, get, reset
+
+
+inc, dec, get, reset = make_counter(0)
+inc()
+print(get())
+inc()
+print(get())
+inc()
+print(get())  # 3
+dec()
+print(get())  # 2
+reset()
+print(get())  # 0
+
+
+【例子】 如果要修改闭包作用域中的变量则需要 nonlocal 关键字
+def outer():
+    num = 10
+
+    def inner():
+        nonlocal num  # nonlocal关键字声明
+        num = 100
+        print(num)
+
+    inner()
+    print(num)
+
+
+outer()
+
+# 100
+# 100
+
+递归
+如果一个函数在内部调用自身本身，这个函数就是递归函数。
+【例子】n! = 1 x 2 x 3 x ... x n
+# 利用循环
+n = 5
+for k in range(1, 5):
+    n = n * k
+print(n)  # 120
+
+# 利用递归
+def factorial(n):
+    if n == 1:
+        return 1
+    return n * factorial(n - 1)
+
+
+print(factorial(5)) # 120
+
+Lambda 表达式
+匿名函数的定义
+在 Python 里有两类函数：
+
+第一类：用 def 关键词定义的正规函数
+第二类：用 lambda 关键词定义的匿名函数
+Python 使用 lambda 关键词来创建匿名函数，而非def关键词，它没有函数名，其语法结构如下：
+
+lambda argument_list: expression
+
+lambda - 定义匿名函数的关键词。
+argument_list - 函数参数，它们可以是位置参数、默认参数、关键字参数，和正规函数里的参数类型一样。
+:- 冒号，在函数参数和表达式中间要加个冒号。
+expression - 只是一个表达式，输入函数参数，输出一些值。
+注意：
+
+expression 中没有 return 语句，因为 lambda 不需要它来返回，表达式本身结果就是返回值。
+匿名函数拥有自己的命名空间，且不能访问自己参数列表之外或全局命名空间里的参数。
+【例子】
+       def sqr(x):
+           return x ** 2
+
+
+       print(sqr)
+       # <function sqr at 0x000000BABD3A4400>
+
+       y = [sqr(x) for x in range(10)]
+       print(y)
+       # [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+
+       lbd_sqr = lambda x: x ** 2
+       print(lbd_sqr)
+       # <function <lambda> at 0x000000BABB6AC1E0>
+
+       y = [lbd_sqr(x) for x in range(10)]
+       print(y)
+       # [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+
+
+       sumary = lambda arg1, arg2: arg1 + arg2
+       print(sumary(10, 20))  # 30
+
+       func = lambda *args: sum(args)
+       print(func(1, 2, 3, 4, 5))  # 15
+
+
+匿名函数的应用
+函数式编程 是指代码中每一块都是不可变的，都由纯函数的形式组成。这里的纯函数，是指函数本身相互独立、互不影响，对于相同的输入，总会有相同的输出，没有任何副作用。
+
+【例子】非函数式编程
+       def f(x):
+           for i in range(0, len(x)):
+               x[i] += 10
+           return x
+
+
+       x = [1, 2, 3]
+       f(x)
+       print(x)
+       # [11, 12, 13]
+
+【例子】函数式编程
+       def f(x):
+           y = []
+           for item in x:
+               y.append(item + 10)
+           return y
+
+
+       x = [1, 2, 3]
+       f(x)
+       print(f(x))
+       print(x)
+       # [1, 2, 3]
+
+
+匿名函数 常常应用于函数式编程的高阶函数 (high-order function)中，主要有两种形式：
+
+参数是函数 (filter, map)
+返回值是函数 (closure)
+如，在 filter和map函数中的应用：
+
+filter(function, iterable) 过滤序列，过滤掉不符合条件的元素，返回一个迭代器对象，如果要转换为列表，可以使用 list() 来转换。
+【例子】
+odd = lambda x: x % 2 == 1
+templist = filter(odd, [1, 2, 3, 4, 5, 6, 7, 8, 9])
+print(list(templist))  # [1, 3, 5, 7, 9]
+
+map(function, *iterables) 根据提供的函数对指定序列做映射。
+【例子】
+m1 = map(lambda x: x ** 2, [1, 2, 3, 4, 5])
+print(list(m1))  
+# [1, 4, 9, 16, 25]
+
+m2 = map(lambda x, y: x + y, [1, 3, 5, 7, 9], [2, 4, 6, 8, 10])
+print(list(m2))  
+# [3, 7, 11, 15, 19]
+
+除了 Python 这些内置函数，我们也可以自己定义高阶函数。
+【例子】
+       def apply_to_list(fun, some_list):
+           return fun(some_list)
+
+       lst = [1, 2, 3, 4, 5]
+       print(apply_to_list(sum, lst))
+       # 15
+
+       print(apply_to_list(len, lst))
+       # 5
+
+       print(apply_to_list(lambda x: sum(x) / len(x), lst))
+       # 3.0
+
+
+
+类与对象
+对象 = 属性 + 方法
+对象是类的实例。换句话说，类主要定义对象的结构，然后我们以类为模板创建对象。类不但包含方法定义，而且还包含所有实例共享的数据。
+
+封装：信息隐蔽技术
+我们可以使用关键字 class 定义 Python 类，关键字后面紧跟类的名称、分号和类的实现。
+
+【例子】
+class Turtle:  # Python中的类名约定以大写字母开头
+    """关于类的一个简单例子"""
+    # 属性
+    color = 'green'
+    weight = 10
+    legs = 4
+    shell = True
+    mouth = '大嘴'
+
+    # 方法
+    def climb(self):
+        print('我正在很努力的向前爬...')
+
+    def run(self):
+        print('我正在飞快的向前跑...')
+
+    def bite(self):
+        print('咬死你咬死你!!')
+
+    def eat(self):
+        print('有得吃，真满足...')
+
+    def sleep(self):
+        print('困了，睡了，晚安，zzz')
+
+
+tt = Turtle()
+print(tt)
+# <__main__.Turtle object at 0x0000007C32D67F98>
+
+print(type(tt))
+# <class '__main__.Turtle'>
+
+print(tt.__class__)
+# <class '__main__.Turtle'>
+
+print(tt.__class__.__name__)
+# Turtle
+
+tt.climb()
+# 我正在很努力的向前爬...
+
+tt.run()
+# 我正在飞快的向前跑...
+
+tt.bite()
+# 咬死你咬死你!!
+
+# Python类也是对象。它们是type的实例
+print(type(Turtle))
+# <class 'type'>
+
+继承：子类自动共享父类之间数据和方法的机制
+【例子】
+class MyList(list):
+    pass
+
+
+lst = MyList([1, 5, 2, 7, 8])
+lst.append(9)
+lst.sort()
+print(lst)
+
+# [1, 2, 5, 7, 8, 9]
+
+多态：不同对象对同一方法响应不同的行动
+【例子】
+class Animal:
+    def run(self):
+        raise AttributeError('子类必须实现这个方法')
+
+
+class People(Animal):
+    def run(self):
+        print('人正在走')
+
+
+class Pig(Animal):
+    def run(self):
+        print('pig is walking')
+
+
+class Dog(Animal):
+    def run(self):
+        print('dog is running')
+
+
+def func(animal):
+    animal.run()
+
+
+func(Pig())
+# pig is walking
+class Animal:
+    def run(self):
+        raise AttributeError('子类必须实现这个方法')
+
+
+class People(Animal):
+    def run(self):
+        print('人正在走')
+
+
+class Pig(Animal):
+    def run(self):
+        print('pig is walking')
+
+
+class Dog(Animal):
+    def run(self):
+        print('dog is running')
+
+
+def func(animal):
+    animal.run()
+
+
+func(Pig())
+# pig is walking
+
+self 是什么？
+Python 的 self 相当于 C++ 的 this 指针。
+【例子】
+class Test:
+    def prt(self):
+        print(self)
+        print(self.__class__)
+
+
+t = Test()
+t.prt()
+# <__main__.Test object at 0x000000BC5A351208>
+# <class '__main__.Test'>
+
+类的方法与普通的函数只有一个特别的区别 —— 它们必须有一个额外的第一个参数名称（对应于该实例，即该对象本身），按照惯例它的名称是 self。
+在调用方法时，我们无需明确提供与参数 self 相对应的参数。
+【例子】
+class Ball:
+    def setName(self, name):
+        self.name = name
+
+    def kick(self):
+        print("我叫%s,该死的，谁踢我..." % self.name)
+
+
+a = Ball()
+a.setName("球A")
+b = Ball()
+b.setName("球B")
+c = Ball()
+c.setName("球C")
+a.kick()
+# 我叫球A,该死的，谁踢我...
+b.kick()
+# 我叫球B,该死的，谁踢我...
+
+
+Python 的魔法方法
+据说，Python 的对象天生拥有一些神奇的方法，它们是面向对象的 Python 的一切...
+
+它们是可以给你的类增加魔力的特殊方法...
+
+如果你的对象实现了这些方法中的某一个，那么这个方法就会在特殊的情况下被 Python 所调用，而这一切都是自动发生的...
+
+类有一个名为__init__(self[, param1, param2...])的魔法方法，该方法在类实例化时会自动调用。
+
+【例子】
+
+class Ball:
+    def __init__(self, name):
+        self.name = name
+
+    def kick(self):
+        print("我叫%s,该死的，谁踢我..." % self.name)
+
+
+a = Ball("球A")
+b = Ball("球B")
+c = Ball("球C")
+a.kick()
+# 我叫球A,该死的，谁踢我...
+b.kick()
+# 我叫球B,该死的，谁踢我...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+origa
+
+
+
+
+
+
+提出临床问题 -> 设计解决方案 -> 解决方案验证 -> 返回第一步重新设计或者进入实际场景验证。
+
+
+
+
+
 
 
 
