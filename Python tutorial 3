@@ -1659,31 +1659,205 @@ __getitem__(self, key)定义获取容器中元素的行为，相当于self[key]�
 __setitem__(self, key, value)定义设置容器中指定元素的行为，相当于self[key] = value。
 __delitem__(self, key)定义删除容器中指定元素的行为，相当于del self[key]。
 【例子】编写一个可改变的自定义列表，要求记录列表中每个元素被访问的次数。
+class CountList:
+    def __init__(self, *args):
+        print('init')
+        self.values = [x for x in args]
+        self.count = {}.fromkeys(range(len(self.values)), 0)
+
+    def __len__(self):
+        print('len')
+        return len(self.values)
+
+    def __getitem__(self, item):
+        print('getitem')
+        self.count[item] += 1
+        return self.values[item]
+
+    def __setitem__(self, key, value):
+        print('setitem')
+        self.values[key] = value
+
+    def __delitem__(self, key):
+        print('delitem')
+        del self.values[key]
+        for i in range(0, len(self.values)):
+            if i >= key:
+                self.count[i] = self.count[i + 1]
+        self.count.pop(len(self.values))
+
+
+c1 = CountList(1, 3, 5, 7, 9)
+c2 = CountList(2, 4, 6, 8, 10)
+print(c1[1])  # 3
+print(c2[2])  # 6
+c2[2] = 12
+print(c1[1] + c2[2])  # 15
+print(c1.count)
+# {0: 0, 1: 2, 2: 0, 3: 0, 4: 0}
+print(c2.count)
+# {0: 0, 1: 0, 2: 2, 3: 0, 4: 0}
+del c1[1]
+print(c1.count)
+# {0: 0, 1: 0, 2: 0, 3: 0}
+
+init
+init
+getitem
+3
+getitem
+6
+setitem
+getitem
+getitem
+15
+{0: 0, 1: 2, 2: 0, 3: 0, 4: 0}
+{0: 0, 1: 0, 2: 2, 3: 0, 4: 0}
+delitem
+{0: 0, 1: 0, 2: 0, 3: 0}
 
 
 
+迭代器
+迭代是 Python 最强大的功能之一，是访问集合元素的一种方式。
+迭代器是一个可以记住遍历的位置的对象。
+迭代器对象从集合的第一个元素开始访问，直到所有的元素被访问完结束。
+迭代器只能往前不会后退。
+字符串，列表或元组对象都可用于创建迭代器：
+【例子】
+string = 'lsgogroup'
+for c in string:
+    print(c)
+
+'''
+l
+s
+g
+o
+g
+r
+o
+u
+p
+'''
+
+for c in iter(string):
+    print(c)
+
+【例子】
+links = {'B': '百度', 'A': '阿里', 'T': '腾讯'}
+for each in links:
+    print('%s -> %s' % (each, links[each]))
+    
+'''
+B -> 百度
+A -> 阿里
+T -> 腾讯
+'''
+
+for each in iter(links):
+    print('%s -> %s' % (each, links[each]))
+
+迭代器有两个基本的方法：iter() 和 next()。
+iter(object) 函数用来生成迭代器。
+next(iterator[, default]) 返回迭代器的下一个项目。
+iterator -- 可迭代对象
+default -- 可选，用于设置在没有下一个元素时返回该默认值，如果不设置，又没有下一个元素则会触发 StopIteration 异常。
+【例子】
+links = {'B': '百度', 'A': '阿里', 'T': '腾讯'}
+
+it = iter(links)
+while True:
+    try:
+        each = next(it)
+    except StopIteration:
+        break
+    print(each)
+
+# B
+# A
+# T
+
+it = iter(links)
+print(next(it))  # B
+print(next(it))  # A
+print(next(it))  # T
+print(next(it))  # StopIteration
+
+把一个类作为一个迭代器使用需要在类中实现两个魔法方法 __iter__() 与 __next__() 。
+
+__iter__(self)定义当迭代容器中的元素的行为，返回一个特殊的迭代器对象， 这个迭代器对象实现了 __next__() 方法并通过 StopIteration 异常标识迭代的完成。
+__next__() 返回下一个迭代器对象。
+StopIteration 异常用于标识迭代的完成，防止出现无限循环的情况，在 __next__() 方法中我们可以设置在完成指定循环次数后触发 StopIteration 异常来结束迭代。
+【例子】
+class Fibs:
+    def __init__(self, n=10):
+        self.a = 0
+        self.b = 1
+        self.n = n
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        self.a, self.b = self.b, self.a + self.b
+        if self.a > self.n:
+            raise StopIteration
+        return self.a
 
 
+fibs = Fibs(100)
+for each in fibs:
+    print(each, end=' ')
+
+# 1 1 2 3 5 8 13 21 34 55 89
+
+4.10 生成器
+
+在 Python 中，使用了 yield 的函数被称为生成器（generator）。
+跟普通函数不同的是，生成器是一个返回迭代器的函数，只能用于迭代操作，更简单点理解生成器就是一个迭代器。
+在调用生成器运行的过程中，每次遇到 yield 时函数会暂停并保存当前所有的运行信息，返回 yield 的值, 并在下一次执行 next() 方法时从当前位置继续运行。
+调用一个生成器函数，返回的是一个迭代器对象。
+【例子】
+def myGen():
+    print('生成器执行！')
+    yield 1
+    yield 2
+    
+myG = myGen()
+for each in myG:
+    print(each)
+
+'''
+生成器执行！
+1
+2
+'''
+
+myG = myGen()
+print(next(myG))  
+# 生成器执行！
+# 1
+
+print(next(myG))  # 2
+print(next(myG))  # StopIteration
 
 
+【例子】用生成器实现斐波那契数列。
+def libs(n):
+    a = 0
+    b = 1
+    while True:
+        a, b = b, a + b
+        if a > n:
+            return
+        yield a
 
 
+for each in libs(100):
+    print(each, end=' ')
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# 1 1 2 3 5 8 13 21 34 55 89
 
 
 
